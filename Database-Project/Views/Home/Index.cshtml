@@ -1,8 +1,114 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<link rel="stylesheet" href="~/css/style.css" />
+<link rel="stylesheet" href="~/css/general.css" />
+<link rel="stylesheet" href="~/css/home.css" />
+
+<div class="search-container container">
+    <input type="text" id="search-input" placeholder="Search for a destination..." />
+    <button id="search-button">Search</button>
 </div>
+
+<div class="home-container container grid grid--3--cols">
+    <div class="meal">
+        <a href="#">
+            <img class="travel-image" src="~/img/harry-potter-and-the-order-of-the-phoenix-cover-image-692x1024.jpeg" />
+        </a>
+        <p class="meal-title">
+            Harry Potter and the Order of the Phoenix
+        </p>
+        <ul class="meal-attributes">
+            <li class="meal-attribute">
+                <span>By: J.K. Rowling</span>
+            </li>
+            <li class="meal-attribute">
+                <span>800+ pages</span>
+            </li>
+        </ul>
+    </div>
+    <div class="meal">
+        <a href="#.html">
+            <img class="travel-image" src="~/img/Alps.jpg" />
+        </a>
+        <p class="meal-title">
+            Swiss Alps
+        </p>
+        <ul class="meal-attributes">
+            <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="flame-outline"></ion-icon><img class="flag-image" src="~/img/Switzerland.png"><span>Switzerland</span>
+            </li>
+            <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="star-outline"></ion-icon><span>Lauterbrunnen</span>
+            </li>
+        </ul>
+    </div>
+    <div class="meal">
+        <a href="#">
+            <img class="travel-image" src="~/img/Yosemite.jpg" />
+        </a>
+        <p class="meal-title">
+            Yosemite National Park
+        </p>
+        <ul class="meal-attributes">
+            <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="flame-outline"></ion-icon><img class="flag-image" src="~/img/USA.webp"><span>USA</span>
+            </li>
+            <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="star-outline"></ion-icon><span>Yosemite Village</span>
+            </li>
+        </ul>
+    </div>
+    <div class="meal">
+        <a href="#">
+            <img class="travel-image" src="~/img/Colosseum.avif" />
+        </a>
+        <p class="meal-title">
+            Colosseum
+        </p>
+        <ul class="meal-attributes">
+            <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="flame-outline"></ion-icon><img class="flag-image" src="~/img/Italy.webp"><span>Italy</span>
+            </li>
+            <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="star-outline"></ion-icon><span>Rome</span>
+            </li>
+        </ul>
+    </div>
+    <div class="meal">
+        <a href="#">
+            <img class="travel-image" src="~/img/Kyoto.jpg" />
+        </a>
+        <p class="meal-title">
+            Kyoto
+        </p>
+        <ul class="meal-attributes">
+            <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="flame-outline"></ion-icon><img class="flag-image" src="~/img/Japan.png"><span>Japan</span>
+            </li>
+            <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="star-outline"></ion-icon><span>Kyoto</span>
+            </li>
+        </ul>
+    </div>
+    <div class="meal">
+        <a href="#">
+            <img class="travel-image" src="~/img/Scornicesti_Ceausescu.jpg" />
+        </a>
+        <p class="meal-title">
+            Ceausescu's Memorial
+        </p>
+        <ul class="meal-attributes">
+            <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="flame-outline"></ion-icon><img class="flag-image" src="~/img/Romania.webp"><span>Romania</span>
+            </li>
+            <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="star-outline"></ion-icon><span>Scornicești</span>
+            </li>
+        </ul>
+    </div>
+</div>
+    </section>
