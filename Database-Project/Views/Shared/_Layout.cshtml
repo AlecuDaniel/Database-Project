@@ -3,33 +3,30 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Database_Project</title>
+    <title>@ViewData["Title"] Library </title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Database_Project.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Travel_Planner___SE_Project.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/style.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Database_Project</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+    <header class="header">
+        <div class="secondary-nav">
+            <ul class="secondary-nav-list">
+                <li><a class="secondary-nav-link" href="index.html">Home</a></li>
+                <li><a class="secondary-nav-link" href="contact.html">Contact</a></li>
+                <li><a class="secondary-nav-link" href="about-us.html">About us</a></li>
+            </ul>
+        </div>
+        <nav>
+            <ul class="main-nav-list">
+                <li><a class="main-nav-link" href="log-in.html">Log in</a></li>
+                <li><a class="main-nav-link nav-sign-up" href="sign-up.html">Sign up</a></li>
+            </ul>
         </nav>
+    </header>
+    </nav>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -37,9 +34,31 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Database_Project - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="contact-container">
+                <span class="contact-title">Contact</span>
+                <span class="street">Street: Bulevardul Decebal</span>
+                <span class="city">City: Craiova</span>
+                <span class="zip-code">Zip Code: 20575</span>
+                <span class="phone-number">Phone Number: 443-498-7166</span>
+                <span class="email">Email: randomemail@gmail.com</span>
+            </div>
+            <div class="newsletter-container">
+                <span class="newsletter-title">Newsletter</span>
+                <input type="email"
+                       value="Your email adress"
+                       class="newsletter-input" />
+                <form>
+                    <button type="submit" class="submit-button">Submit</button>
+                </form>
+                <div class="contact-icons">
+                    <ion-icon name="logo-facebook" class="contact-icon"></ion-icon>
+                    <ion-icon name="logo-instagram" class="contact-icon"></ion-icon>
+                    <ion-icon name="logo-twitter" class="contact-icon"></ion-icon>
+                    <ion-icon name="logo-youtube" class="contact-icon"></ion-icon>
+                </div>
+            </div>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
