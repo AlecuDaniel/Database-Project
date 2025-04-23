@@ -3,3 +3,25 @@
 *@
 @{
 }
+
+<link rel="stylesheet" href="~/css/general.css" />
+<link rel="stylesheet" href="~/css/login.css"/>
+
+<section class="section-log-in container margin-bottom-md">
+    <div class="log-in-container">
+        <div class="log-in-group">
+            <span class="log-in-input-label">Email</span>
+            <input type="text" class="log-in-input-box" />
+        </div>
+        <div class="log-in-group">
+            <span class="log-in-input-label">Password</span>
+            <input type="password" class="log-in-input-box" />
+        </div>
+        <div class="log-in-group">
+            <a class="register-account" asp-controller="Account" asp-action="Register">Register Account</a>
+                <form>
+                    <button type="submit" class="log-in-button">Log In</button>
+                </form>
+         </div>
+    </div>
+</section>
