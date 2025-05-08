@@ -22,4 +22,5 @@ namespace Database_Project.Models
         public Book Book { get; set; }
         public LibraryBranch LibraryBranch { get; set; }
     }
+
 }
