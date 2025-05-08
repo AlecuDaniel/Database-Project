@@ -1,0 +1,28 @@
+﻿@page
+@model Database_Project.Areas.Identity.Pages.Account.LoginModel
+
+<link rel="stylesheet" href="~/css/general.css" />
+<link rel="stylesheet" href="~/css/login.css"/>
+
+<section class="section-log-in container margin-bottom-md">
+    <form method="post" class="log-in-container">
+        <div class="log-in-group">
+            <span class="log-in-input-label">Email</span>
+            <input type="text" name="Email" class="log-in-input-box" />
+        </div>
+        <div class="log-in-group">
+            <span class="log-in-input-label">Password</span>
+            <input type="password" name="Password" class="log-in-input-box" />
+        </div>
+        <div class="log-in-group">
+            <a class="register-account" asp-area="Identity" asp-page="/Account/Register">Register Account</a>
+        </div>
+        <div class="log-in-group">
+            <button type="submit" class="log-in-button">Log In</button>
+        </div>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

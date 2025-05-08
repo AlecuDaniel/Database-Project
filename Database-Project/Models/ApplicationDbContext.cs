@@ -1,11 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Database_Project.Models;
-using System.Collections.Generic;
-using System.Reflection.Emit;
 
 namespace Database_Project.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<
+        User,                     // Custom User with int key
+        IdentityRole<int>,        // IdentityRole with int key
+        int,                      // Primary key type
+        IdentityUserClaim<int>,
+        IdentityUserRole<int>,
+        IdentityUserLogin<int>,
+        IdentityRoleClaim<int>,
+        IdentityUserToken<int>>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -13,7 +21,6 @@ namespace Database_Project.Data
         }
 
         public DbSet<Book> Books { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<BorrowRecord> BorrowRecords { get; set; }
         public DbSet<BookStock> BookStocks { get; set; }
         public DbSet<LibraryBranch> LibraryBranches { get; set; }
@@ -21,6 +28,8 @@ namespace Database_Project.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<UnwantedCustomer>()
                 .HasOne(uc => uc.User)
                 .WithOne(u => u.UnwantedCustomer)
