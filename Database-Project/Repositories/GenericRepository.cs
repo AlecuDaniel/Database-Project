@@ -1,9 +1,10 @@
 ﻿using Database_Project.Data;
+using Database_Project.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AutoHubBE.Repository
+namespace Database_Project.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {

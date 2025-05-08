@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Database_Project.Models;
-using Database_Project.Services;
+using Database_Project.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Database_Project.Controllers

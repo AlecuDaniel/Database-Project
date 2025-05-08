@@ -1,9 +1,11 @@
 using Database_Project.Data;
 using Database_Project.Repositories;
+using Database_Project.Repositories.Interfaces;
 using Database_Project.Services;
 using Microsoft.EntityFrameworkCore;
 using Database_Project.Models;
 using Microsoft.AspNetCore.Identity;
+using Database_Project.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

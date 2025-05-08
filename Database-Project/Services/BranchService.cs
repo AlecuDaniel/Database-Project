@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Database_Project.Models;
-using AutoHubBE.Repository;
+using Database_Project.Repositories.Interfaces;
+using Database_Project.Services.Interfaces;
 
 namespace Database_Project.Services
 {

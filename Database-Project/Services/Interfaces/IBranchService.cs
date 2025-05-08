@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Database_Project.Models;
 
-namespace Database_Project.Services
+namespace Database_Project.Services.Interfaces
 {
     public interface IBranchService
     {

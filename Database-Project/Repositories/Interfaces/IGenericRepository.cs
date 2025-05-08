@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AutoHubBE.Repository
+namespace Database_Project.Repositories.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {
