@@ -10,12 +10,12 @@ namespace Database_Project.Models
 
         [Required]
         [StringLength(100)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [StringLength(255)]
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
-        public ICollection<BookStock> BookStocks { get; set; }
-        public ICollection<BorrowRecord> BorrowRecords { get; set; }
+        public ICollection<BookStock>? BookStocks { get; set; }
+        public ICollection<BorrowRecord>? BorrowRecords { get; set; }
     }
 }
