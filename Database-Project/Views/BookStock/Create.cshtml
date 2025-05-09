@@ -1,0 +1,28 @@
+﻿@model Database_Project.ViewModels.BookStockViewModel
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="BookId" class="control-label"></label>
+        <select asp-for="BookId" class="form-control" asp-items="Model.Books">
+            <option value="">-- Select Book --</option>
+        </select>
+        <span asp-validation-for="BookId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="BranchId" class="control-label"></label>
+        <select asp-for="BranchId" class="form-control" asp-items="Model.Branches">
+            <option value="">-- Select Branch --</option>
+        </select>
+        <span asp-validation-for="BranchId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Quantity"></label>
+        <input asp-for="Quantity" class="form-control" />
+        <span asp-validation-for="Quantity" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

@@ -1,7 +1,7 @@
-﻿using Database_Project.Models;
-using Database_Project.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Database_Project.Models;
+using Database_Project.Services;
 
 namespace Database_Project.Controllers
 {
@@ -14,33 +14,27 @@ namespace Database_Project.Controllers
             _bookService = bookService;
         }
 
-        // GET: /Book
         public async Task<IActionResult> Index()
         {
             var books = await _bookService.GetAllBooksAsync();
             return View(books);
         }
 
-        // GET: /Book/Details/5
         public async Task<IActionResult> Details(int id)
         {
             var book = await _bookService.GetBookByIdAsync(id);
             if (book == null)
-            {
                 return NotFound();
-            }
+
             return View(book);
         }
 
-        // GET: /Book/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: /Book/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Book book)
         {
             if (ModelState.IsValid)
@@ -48,52 +42,41 @@ namespace Database_Project.Controllers
                 await _bookService.AddBookAsync(book);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(book);
         }
 
-        // GET: /Book/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             var book = await _bookService.GetBookByIdAsync(id);
             if (book == null)
-            {
                 return NotFound();
-            }
+
             return View(book);
         }
 
-        // POST: /Book/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Book book)
+        public async Task<IActionResult> Edit(Book book)
         {
-            if (id != book.Id)
-            {
-                return BadRequest();
-            }
-
             if (ModelState.IsValid)
             {
                 await _bookService.UpdateBookAsync(book);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(book);
         }
 
-        // GET: /Book/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             var book = await _bookService.GetBookByIdAsync(id);
             if (book == null)
-            {
                 return NotFound();
-            }
+
             return View(book);
         }
 
-        // POST: /Book/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("DeleteConfirmed")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _bookService.DeleteBookAsync(id);
