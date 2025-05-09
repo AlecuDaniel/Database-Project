@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Database_Project.Models;
 using Microsoft.AspNetCore.Identity;
 using Database_Project.Services.Interfaces;
+using Database_Project.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,12 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped<IBranchService, BranchService>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IBookService, BookService>();
+
+// Add Unwanted Customers services
+builder.Services.AddScoped<IUnwantedCustomersRepository, UnwantedCustomersRepository>();
+builder.Services.AddScoped<IUnwantedCustomersService, UnwantedCustomersService>();
+
+// Add Book Stock services
 builder.Services.AddScoped<IBookStockRepository, BookStockRepository>();
 builder.Services.AddScoped<IBookStockService, BookStockService>();
 

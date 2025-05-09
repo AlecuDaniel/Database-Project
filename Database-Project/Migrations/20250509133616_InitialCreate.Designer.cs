@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database_Project.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250508145331_InitialCreate")]
+    [Migration("20250509133616_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -140,7 +140,6 @@ namespace Database_Project.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
