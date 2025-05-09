@@ -1,0 +1,47 @@
+﻿@model Database_Project.Models.UnwantedCustomer
+
+@{
+    ViewData["Title"] = "Remove Unwanted Customer";
+}
+
+<h1>Remove Unwanted Customer</h1>
+
+<h3>Are you sure you want to remove this user from the unwanted list?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            User Name
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.User.UserName)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.DateAdded)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.DateAdded)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Reason)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Reason)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.IsActive)
+        </dt>
+        <dd class="col-sm-9">
+            @(Model.IsActive ? "Yes" : "No")
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="UserId" />
+        <input type="submit" value="Confirm Removal" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </form>
+</div>

@@ -11,7 +11,7 @@ namespace Database_Project.Models
         public int UserId { get; set; }
 
         [Required]
-        public DateTime DateAdded { get; set; }
+        public DateTime DateAdded { get; set; } = DateTime.Now;
 
         [StringLength(255)]
         public string Reason { get; set; }
@@ -19,6 +19,6 @@ namespace Database_Project.Models
         [Required]
         public bool IsActive { get; set; }
 
-        public User User { get; set; }
+        public User? User { get; set; }
     }
 }

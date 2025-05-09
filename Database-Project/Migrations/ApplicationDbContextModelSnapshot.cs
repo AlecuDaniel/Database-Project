@@ -250,7 +250,7 @@ namespace Database_Project.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
-                    
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
