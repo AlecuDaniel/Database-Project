@@ -28,6 +28,8 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped<IBranchService, BranchService>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IBookStockRepository, BookStockRepository>();
+builder.Services.AddScoped<IBookStockService, BookStockService>();
 
 var app = builder.Build();
 

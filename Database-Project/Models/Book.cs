@@ -21,11 +21,9 @@ namespace Database_Project.Models
         [StringLength(100)]
         public string Publisher { get; set; }
 
-        public int Quantity { get; set; }
-
         public string Description { get; set; }
 
-        public ICollection<BookStock> BookStocks { get; set; }
-        public ICollection<BorrowRecord> BorrowRecords { get; set; }
+        public ICollection<BookStock>? BookStocks { get; set; }
+        public ICollection<BorrowRecord>? BorrowRecords { get; set; }
     }
 }

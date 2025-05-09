@@ -1,8 +1,8 @@
-﻿using Database_Project.Data;
-using Database_Project.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Database_Project.Models;
+using Database_Project.Data;
 
 namespace Database_Project.Repositories
 {
@@ -18,17 +18,15 @@ namespace Database_Project.Repositories
         public async Task<IEnumerable<Book>> GetAllAsync()
         {
             return await _context.Books
-                .Include(b => b.BookStocks)
-                .Include(b => b.BorrowRecords)
-                .ToListAsync();
+                                 .Include(b => b.BookStocks)
+                                 .ToListAsync();
         }
 
         public async Task<Book> GetByIdAsync(int id)
         {
             return await _context.Books
-                .Include(b => b.BookStocks)
-                .Include(b => b.BorrowRecords)
-                .FirstOrDefaultAsync(b => b.Id == id);
+                                 .Include(b => b.BookStocks)
+                                 .FirstOrDefaultAsync(b => b.Id == id);
         }
 
         public async Task AddAsync(Book book)
