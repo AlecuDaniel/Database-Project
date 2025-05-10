@@ -44,6 +44,11 @@ namespace Database_Project.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<string>("Publisher")
                         .IsRequired()
                         .HasMaxLength(100)

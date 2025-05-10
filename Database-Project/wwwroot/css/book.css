@@ -1,0 +1,143 @@
+﻿.book-details-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.book-cover-container {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.book-cover {
+    max-height: 400px;
+    width: auto;
+    margin: 0 auto;
+    border-radius: 4px;
+}
+
+.no-cover {
+    color: #6c757d;
+    padding: 40px 0;
+}
+
+.placeholder-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.book-title {
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #343a40;
+}
+
+.book-meta {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.meta-item {
+    margin-bottom: 10px;
+}
+
+.meta-label {
+    font-weight: 600;
+    color: #495057;
+    display: inline-block;
+    width: 100px;
+}
+
+.meta-value {
+    color: #212529;
+}
+
+.btn-borrow {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+    .btn-borrow:hover {
+        background-color: #218838;
+        color: white;
+    }
+
+.btn-edit {
+    background-color: #17a2b8;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+    .btn-edit:hover {
+        background-color: #138496;
+        color: white;
+    }
+
+.btn-back {
+    color: #6c757d;
+    padding: 8px 16px;
+    border: 1px solid #6c757d;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+    .btn-back:hover {
+        color: #495057;
+        border-color: #495057;
+        text-decoration: none;
+    }
+
+.description-section {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    color: #343a40;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.description-content {
+    line-height: 1.6;
+    color: #495057;
+}
+
+/* Stiluri responsive */
+@media (max-width: 768px) {
+    .book-cover {
+        max-height: 300px;
+    }
+
+    .book-title {
+        font-size: 1.8rem;
+    }
+
+    .meta-label {
+        width: 80px;
+    }
+}

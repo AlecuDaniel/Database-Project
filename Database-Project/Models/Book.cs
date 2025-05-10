@@ -22,6 +22,9 @@ namespace Database_Project.Models
         public string Publisher { get; set; }
 
         public string Description { get; set; }
+        
+        [StringLength(255)]
+        public string? ImagePath { get; set; }
 
         public ICollection<BookStock>? BookStocks { get; set; }
         public ICollection<BorrowRecord>? BorrowRecords { get; set; }

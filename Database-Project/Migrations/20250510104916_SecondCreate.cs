@@ -5,7 +5,7 @@
 namespace Database_Project.Migrations
 {
     /// <inheritdoc />
-    public partial class Book : Migration
+    public partial class SecondCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,31 +14,21 @@ namespace Database_Project.Migrations
                 name: "Quantity",
                 table: "Books");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "Address",
-                table: "LibraryBranches",
+            migrationBuilder.AddColumn<string>(
+                name: "ImagePath",
+                table: "Books",
                 type: "nvarchar(255)",
                 maxLength: 255,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(255)",
-                oldMaxLength: 255);
+                nullable: false,
+                defaultValue: "");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
-                name: "Address",
-                table: "LibraryBranches",
-                type: "nvarchar(255)",
-                maxLength: 255,
-                nullable: false,
-                defaultValue: "",
-                oldClrType: typeof(string),
-                oldType: "nvarchar(255)",
-                oldMaxLength: 255,
-                oldNullable: true);
+            migrationBuilder.DropColumn(
+                name: "ImagePath",
+                table: "Books");
 
             migrationBuilder.AddColumn<int>(
                 name: "Quantity",

@@ -37,7 +37,7 @@ builder.Services.AddScoped<IUnwantedCustomersService, UnwantedCustomersService>(
 // Add Book Stock services
 builder.Services.AddScoped<IBookStockRepository, BookStockRepository>();
 builder.Services.AddScoped<IBookStockService, BookStockService>();
-
+builder.Services.AddScoped<IImageService, ImageService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
