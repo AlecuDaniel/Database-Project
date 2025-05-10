@@ -1,0 +1,31 @@
+﻿@model Database_Project.ViewModels.ProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<h2>My Profile</h2>
+
+<form asp-action="Profile" method="post">
+    <div>
+        <label>Select Profile Picture</label><br />
+        @foreach (var picture in Model.AvailablePictures)
+        {
+            <label style="margin-right:15px;">
+                <input type="radio" name="SelectedProfilePicture" value="@picture" @(picture == Model.SelectedProfilePicture ? "checked" : "") />
+                <img src="~/images/profile-pictures/@picture" alt="Profile Pic" width="100" />
+            </label>
+        }
+    </div>
+
+    <div class="form-group mt-3">
+        <label>Bio</label>
+        <textarea asp-for="Bio" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Bio" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Update Profile</button>
+</form>
+
+<form asp-action="DeleteAccount" method="post" class="mt-4">
+    <button type="submit" class="btn btn-danger">Delete My Account</button>
+</form>
