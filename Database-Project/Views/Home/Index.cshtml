@@ -1,7 +1,7 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Database_Project.Controllers.HomeViewModel
+
 @{
+    ViewData["Title"] = "Home Page";
 }
 
 <link rel="stylesheet" href="~/css/style.css" />
@@ -9,117 +9,40 @@
 <link rel="stylesheet" href="~/css/home.css" />
 
 <div class="search-container container">
-    <input type="text" id="search-input" placeholder="Search for a destination..." />
+    <input type="text" id="search-input" placeholder="Search for a book..." />
     <button id="search-button">Search</button>
 </div>
 
 <div class="home-container container grid grid--3--cols">
-    <div class="meal">
-        <a href="#">
-            <img class="travel-image" src="~/img/harry-potter-and-the-order-of-the-phoenix-cover-image-692x1024.jpeg" alt="Harry Potter and the Order of the Phoenix" />
-        </a>
-        <p class="meal-title">
-            Harry Potter and the Order of the Phoenix
-        </p>
-        <ul class="meal-attributes">
-            <li class="meal-attribute">
-                <span>By: J.K. Rowling</span>
-            </li>
-            <li class="meal-attribute">
-                <span>800+ pages</span>
-            </li>
-        </ul>
-    </div>
+    <!-- Cărți hardcodate -->
+    @foreach (var book in Model.FeaturedBooks)
+    {
+        <div class="meal">
+            <a href="#">
+                <img class="travel-image" src="@book.ImagePath" alt="@book.Title" />
+            </a>
+            <p class="meal-title">@book.Title</p>
+            <ul class="meal-attributes">
+                <li class="meal-attribute"><span>By: @book.Author</span></li>
+                <li class="meal-attribute"><span>@book.Details</span></li>
+            </ul>
+        </div>
+    }
 
-    
-    <div class="meal">
-        <a href="#">
-            <img class="travel-image" src="~/img/maitreyi.jpg" alt="maitreyi" />
-        </a>
-        <p class="meal-title">
-            Maitreyi
-        </p>
-        <ul class="meal-attributes">
-            <li class="meal-attribute">
-                <span>By: Mircea Eliade</span>
-            </li>
-            <li class="meal-attribute">
-                <span> 256 pages</span>
-            </li>
-        </ul>
-    </div>
-
-    
-    <div class="meal">
-        <a href="#">
-            <img class="travel-image" src="~/img/procust.jpg" alt="procust" />
-        </a>
-        <p class="meal-title">
-            Patul lui Procust
-        </p>
-        <ul class="meal-attributes">
-            <li class="meal-attribute">
-                <span>By: Camil Petrescu</span>
-            </li>
-            <li class="meal-attribute">
-                <span>352 pages</span>
-            </li>
-        </ul>
-    </div>
-
-   
-    <div class="meal">
-        <a href="#">
-            <img class="travel-image" src="~/img/solenoid.jpg" alt="solenoid" />
-        </a>
-        <p class="meal-title">
-            Solenoid
-        </p>
-        <ul class="meal-attributes">
-            <li class="meal-attribute">
-                <span>By: Mircea Cărtărescu</span>
-            </li>
-            <li class="meal-attribute">
-                <span>672 pages</span>
-            </li>
-        </ul>
-    </div>
-
-    <div class="meal">
-        <a href="#">
-            <img class="travel-image" src="~/img/alchemist.jpg" alt="alchemist" />
-        </a>
-        <p class="meal-title">
-            The Alchemist
-        </p>
-        <ul class="meal-attributes">
-            <li class="meal-attribute">
-                <span>By: Paulo Coelho</span>
-            </li>
-            <li class="meal-attribute">
-                <span>208 pages</span>
-            </li>
-        </ul>
-    </div>
-
-    
-    <div class="meal">
-        <a href="#">
-            <img class="travel-image" src="~/img/ION.jpg" alt="ION" />
-        </a>
-        <p class="meal-title">
-            Ion
-        </p>
-        <ul class="meal-attributes">
-            <li class="meal-attribute">
-                <span>By: Liviu Rebreanu</span>
-            </li>
-            <li class="meal-attribute">
-                <span>350 pages</span>
-            </li>
-        </ul>
-    </div>
-
-    
+    <!-- Cărți din CRUD -->
+    @foreach (var book in Model.AllBooks)
+    {
+        <div class="meal">
+            <a asp-action="Details" asp-controller="Book" asp-route-id="@book.Id">
+                <img class="travel-image"
+                     src="@(string.IsNullOrEmpty(book.ImagePath) ? "/img/default-book.jpg" : book.ImagePath)"
+                     alt="@book.Title" />
+            </a>
+            <p class="meal-title">@book.Title</p>
+            <ul class="meal-attributes">
+                <li class="meal-attribute"><span>By: @book.Authors</span></li>
+                <li class="meal-attribute"><span>@book.Publisher</span></li>
+            </ul>
+        </div>
+    }
 </div>
-</section>

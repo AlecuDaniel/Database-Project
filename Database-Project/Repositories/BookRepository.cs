@@ -28,6 +28,11 @@ namespace Database_Project.Repositories
                                  .Include(b => b.BookStocks)
                                  .FirstOrDefaultAsync(b => b.Id == id);
         }
+        public async Task<Book> GetByIdForUpdateAsync(int id)
+        {
+            return await _context.Books
+                .FirstOrDefaultAsync(b => b.Id == id);
+        }
 
         public async Task AddAsync(Book book)
         {

@@ -24,6 +24,11 @@ namespace Database_Project.Services
             return await _bookRepository.GetByIdAsync(id);
         }
 
+        public async Task<Book> GetBookByIdForUpdateAsync(int id)
+        {
+            return await _bookRepository.GetByIdForUpdateAsync(id);
+        }
+
         public async Task AddBookAsync(Book book)
         {
             await _bookRepository.AddAsync(book);

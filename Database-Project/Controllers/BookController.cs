@@ -4,6 +4,7 @@ using Database_Project.Models;
 using Database_Project.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Database_Project.Controllers
 {
@@ -11,11 +12,16 @@ namespace Database_Project.Controllers
     {
         private readonly IBookService _bookService;
         private readonly IImageService _imageService;
+        private readonly ILogger<BookController> _logger;
 
-        public BookController(IBookService bookService, IImageService imageService)
+        public BookController(
+            IBookService bookService,
+            IImageService imageService,
+            ILogger<BookController> logger)
         {
             _bookService = bookService;
             _imageService = imageService;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index()
@@ -26,7 +32,7 @@ namespace Database_Project.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var book = await _bookService.GetBookByIdAsync(id);
+            var book = await _bookService.GetBookByIdForUpdateAsync(id);
             if (book == null)
                 return NotFound();
 
@@ -44,21 +50,28 @@ namespace Database_Project.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (imageFile != null && imageFile.Length > 0)
+                try
                 {
-                    book.ImagePath = await _imageService.UploadImageAsync(imageFile);
+                    if (imageFile != null && imageFile.Length > 0)
+                    {
+                        book.ImagePath = await _imageService.UploadImageAsync(imageFile);
+                    }
+
+                    await _bookService.AddBookAsync(book);
+                    return RedirectToAction(nameof(Index));
                 }
-
-                await _bookService.AddBookAsync(book);
-                return RedirectToAction(nameof(Index));
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error creating book");
+                    ModelState.AddModelError("", "An error occurred while creating the book.");
+                }
             }
-
             return View(book);
         }
 
         public async Task<IActionResult> Edit(int id)
         {
-            var book = await _bookService.GetBookByIdAsync(id);
+            var book = await _bookService.GetBookByIdForUpdateAsync(id);
             if (book == null)
                 return NotFound();
 
@@ -67,35 +80,54 @@ namespace Database_Project.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Book book, IFormFile imageFile)
+        public async Task<IActionResult> Edit(int id, Book book, IFormFile imageFile)
         {
-            if (ModelState.IsValid)
+            if (id != book.Id)
             {
-                var existingBook = await _bookService.GetBookByIdAsync(book.Id);
-
-                if (imageFile != null && imageFile.Length > 0)
-                {
-                    // Delete old image if exists
-                    _imageService.DeleteImage(existingBook.ImagePath);
-                    // Upload new image
-                    book.ImagePath = await _imageService.UploadImageAsync(imageFile);
-                }
-                else
-                {
-                    // Keep the old image if no new one was uploaded
-                    book.ImagePath = existingBook.ImagePath;
-                }
-
-                await _bookService.UpdateBookAsync(book);
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
 
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var existingBook = await _bookService.GetBookByIdForUpdateAsync(id);
+                    if (existingBook == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Update properties
+                    existingBook.Title = book.Title;
+                    existingBook.ISBN = book.ISBN;
+                    existingBook.Authors = book.Authors;
+                    existingBook.Publisher = book.Publisher;
+                    existingBook.Description = book.Description;
+
+                    // Handle image upload
+                    if (imageFile != null && imageFile.Length > 0)
+                    {
+                        // Delete old image if exists
+                        _imageService.DeleteImage(existingBook.ImagePath);
+                        // Upload new image
+                        existingBook.ImagePath = await _imageService.UploadImageAsync(imageFile);
+                    }
+
+                    await _bookService.UpdateBookAsync(existingBook);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error updating book with ID {BookId}", id);
+                    ModelState.AddModelError("", "An error occurred while updating the book.");
+                }
+            }
             return View(book);
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            var book = await _bookService.GetBookByIdAsync(id);
+            var book = await _bookService.GetBookByIdForUpdateAsync(id);
             if (book == null)
                 return NotFound();
 
@@ -106,15 +138,22 @@ namespace Database_Project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var book = await _bookService.GetBookByIdAsync(id);
-            if (book != null)
+            try
             {
-                // Delete associated image
-                _imageService.DeleteImage(book.ImagePath);
-                await _bookService.DeleteBookAsync(id);
+                var book = await _bookService.GetBookByIdForUpdateAsync(id);
+                if (book != null)
+                {
+                    // Delete associated image
+                    _imageService.DeleteImage(book.ImagePath);
+                    await _bookService.DeleteBookAsync(id);
+                }
+                return RedirectToAction(nameof(Index));
             }
-
-            return RedirectToAction(nameof(Index));
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting book with ID {BookId}", id);
+                return RedirectToAction(nameof(Delete), new { id, error = true });
+            }
         }
     }
 }
