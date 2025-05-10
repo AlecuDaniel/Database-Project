@@ -3,27 +3,84 @@
 @{
     ViewData["Title"] = "Book Details";
 }
+<link rel="stylesheet" href="~/css/book.css" />
 
-<h2>Book Details</h2>
+<div class="book-details-container">
+    <div class="row">
+        <!-- Book Cover Column -->
+        <div class="col-md-4">
+            <div class="book-cover-container">
+                @if (!string.IsNullOrEmpty(Model.ImagePath))
+                {
+                    <img src="@Model.ImagePath" alt="Book cover" class="book-cover img-fluid" />
+                }
+                else
+                {
+                    <div class="no-cover">
+                        <span class="placeholder-icon">📖</span>
+                        <p>No cover available</p>
+                    </div>
+                }
+            </div>
+        </div>
 
-<div>
-    <h4>@Model.Title</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">ISBN</dt>
-        <dd class="col-sm-10">@Model.ISBN</dd>
+        <!-- Book Details Column -->
+        <div class="col-md-8">
+            <div class="book-info">
+                <h1 class="book-title">@Model.Title</h1>
 
-        <dt class="col-sm-2">Authors</dt>
-        <dd class="col-sm-10">@Model.Authors</dd>
+                <div class="book-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Authors:</span>
+                        <span class="meta-value">@Model.Authors</span>
+                    </div>
 
-        <dt class="col-sm-2">Publisher</dt>
-        <dd class="col-sm-10">@Model.Publisher</dd>
+                    <div class="meta-item">
+                        <span class="meta-label">Publisher:</span>
+                        <span class="meta-value">@Model.Publisher</span>
+                    </div>
 
-        <dt class="col-sm-2">Description</dt>
-        <dd class="col-sm-10">@Model.Description</dd>
-    </dl>
+                    <div class="meta-item">
+                        <span class="meta-label">ISBN:</span>
+                        <span class="meta-value">@Model.ISBN</span>
+                    </div>
+                </div>
+
+                <div class="book-actions mt-4">
+                    <a href="#" class="btn btn-borrow">Borrow</a>
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-edit">Edit</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Description Section -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="description-section">
+                <h3 class="section-title">Description</h3>
+                <div class="description-content">
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        <p>@Model.Description</p>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No description available for this book.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <a asp-action="Index" class="btn btn-back">Back to List</a>
+        </div>
+    </div>
 </div>
-<p>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a> |
-    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-</p>
+
+<style>
+    <link rel="stylesheet" href="~/css/book.css" / >
+</style>
