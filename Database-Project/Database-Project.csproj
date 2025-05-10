@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="wwwroot\images\profile-pictures\" />
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
