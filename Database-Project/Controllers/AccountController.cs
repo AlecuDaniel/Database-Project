@@ -85,5 +85,10 @@ namespace Database_Project.Controllers
             await _userManager.DeleteAsync(user);
             return RedirectToAction("Index", "Home");
         }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

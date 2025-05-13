@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
 using Database_Project.Models;
 using Database_Project.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Database_Project.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly IBranchService _branchService;
