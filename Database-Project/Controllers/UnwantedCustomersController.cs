@@ -1,11 +1,13 @@
 ﻿using Database_Project.Models;
 using Database_Project.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 
 namespace Database_Project.Controllers
 {
+    [Authorize(Roles = "Librarian,Admin")]
     public class UnwantedCustomersController : Controller
     {
         private readonly IUnwantedCustomersService _service;

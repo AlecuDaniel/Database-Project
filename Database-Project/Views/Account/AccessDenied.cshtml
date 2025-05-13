@@ -1,0 +1,59 @@
+﻿@model Database_Project.ViewModels.ProfileViewModel
+@{
+    ViewData["Title"] = "Access denied";
+}
+
+<link rel="stylesheet" href="~/css/general.css" />
+
+<section class="section-access-denied container">
+    <div class="access-denied-container">
+        <h1 class="access-denied-title">@ViewData["Title"]</h1>
+        <p class="access-denied-message">
+            You don't have permission to access this resource.
+        </p>
+        <a href="/" class="access-denied-link">Return to Home Page</a>
+    </div>
+</section>
+
+<style>
+    .section-access-denied {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 60vh;
+    }
+
+    .access-denied-container {
+        text-align: center;
+        padding: 2rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .access-denied-title {
+        color: #dc3545;
+        margin-bottom: 1rem;
+    }
+
+    .access-denied-message {
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+    }
+
+    .access-denied-link {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+
+        .access-denied-link:hover {
+            background-color: #0056b3;
+        }
+</style>

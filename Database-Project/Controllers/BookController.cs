@@ -5,9 +5,11 @@ using Database_Project.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Database_Project.Controllers
 {
+    [Authorize(Roles = "Librarian,Admin")]
     public class BookController : Controller
     {
         private readonly IBookService _bookService;

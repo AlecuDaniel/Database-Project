@@ -67,8 +67,8 @@ namespace Database_Project.Migrations
                     ISBN = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Authors = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Publisher = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImagePath = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
                 },
                 constraints: table =>
                 {

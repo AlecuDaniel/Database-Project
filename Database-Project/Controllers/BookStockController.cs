@@ -3,12 +3,14 @@ using Database_Project.Repositories.Interfaces;
 using Database_Project.Services;
 using Database_Project.Services.Interfaces;
 using Database_Project.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
 
 namespace Database_Project.Controllers
 {
+    [Authorize(Roles = "Librarian,Admin")]
     public class BookStockController : Controller
     {
         private readonly IBookStockService _service;
