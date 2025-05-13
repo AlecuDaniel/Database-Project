@@ -3,6 +3,7 @@ using Database_Project.Models;
 using Database_Project.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Database_Project.Repositories
@@ -40,6 +41,14 @@ namespace Database_Project.Repositories
                 .ToListAsync();
         }
 
+        public async Task<BookStock> GetByBookAndBranchAsync(int bookId, int branchId)
+        {
+            return await _context.BookStocks
+                .Include(bs => bs.Book)
+                .Include(bs => bs.LibraryBranch)
+                .FirstOrDefaultAsync(bs => bs.BookId == bookId && bs.BranchId == branchId);
+        }
+
         public async Task AddAsync(BookStock bookStock)
         {
             _context.BookStocks.Add(bookStock);
@@ -54,11 +63,9 @@ namespace Database_Project.Repositories
                 existing.BookId = updated.BookId;
                 existing.BranchId = updated.BranchId;
                 existing.Quantity = updated.Quantity;
-
                 await _context.SaveChangesAsync();
             }
         }
-
 
         public async Task DeleteAsync(int id)
         {
@@ -68,6 +75,15 @@ namespace Database_Project.Repositories
                 _context.BookStocks.Remove(stock);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<Book> GetBookWithStocksAsync(int id)
+        {
+            return await _context.Books
+                .Include(b => b.BookStocks)
+                .ThenInclude(bs => bs.LibraryBranch)
+                .Include(b => b.BorrowRecords)
+                .FirstOrDefaultAsync(b => b.Id == id);
         }
     }
 }

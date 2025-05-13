@@ -12,5 +12,7 @@ namespace Database_Project.Repositories.Interfaces
         Task UpdateAsync(BookStock bookStock);
         Task DeleteAsync(int id);
         Task<IEnumerable<BookStock>> GetByBookIdAsync(int bookId);
+        Task<BookStock> GetByBookAndBranchAsync(int bookId, int branchId);
+        Task<Book> GetBookWithStocksAsync(int id);
     }
 }

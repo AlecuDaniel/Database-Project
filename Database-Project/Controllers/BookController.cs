@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
+using Database_Project.Services.Interfaces;
+using System.Security.Claims;
 
 namespace Database_Project.Controllers
 {
@@ -13,15 +15,18 @@ namespace Database_Project.Controllers
     public class BookController : Controller
     {
         private readonly IBookService _bookService;
+        private readonly IBookStockService _bookStockService;
         private readonly IImageService _imageService;
         private readonly ILogger<BookController> _logger;
 
         public BookController(
             IBookService bookService,
+            IBookStockService bookStockService,
             IImageService imageService,
             ILogger<BookController> logger)
         {
             _bookService = bookService;
+            _bookStockService = bookStockService;
             _imageService = imageService;
             _logger = logger;
         }
@@ -35,6 +40,10 @@ namespace Database_Project.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var book = await _bookService.GetBookByIdForUpdateAsync(id);
+            if (book == null)
+                return NotFound();
+
+            book = await _bookService.GetBookWithStocksAsync(id);
             if (book == null)
                 return NotFound();
 
@@ -155,6 +164,97 @@ namespace Database_Project.Controllers
             {
                 _logger.LogError(ex, "Error deleting book with ID {BookId}", id);
                 return RedirectToAction(nameof(Delete), new { id, error = true });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Borrow(int id, int branchId)
+        {
+            try
+            {
+                var stock = await _bookStockService.GetByBookAndBranchAsync(id, branchId);
+                if (stock == null || stock.Quantity <= 0)
+                {
+                    TempData["ErrorMessage"] = "This book is not available at the selected branch.";
+                    return RedirectToAction(nameof(Details), new { id });
+                }
+
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userId))
+                {
+                    TempData["ErrorMessage"] = "Unable to identify user.";
+                    return RedirectToAction(nameof(Details), new { id });
+                }
+
+                var borrowRecord = new BorrowRecord
+                {
+                    BookId = id,
+                    UserId = int.Parse(userId),
+                    BranchId = branchId,
+                    BorrowDate = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(14),
+                    IsOverdue = false
+                };
+
+                stock.Quantity--;
+                await _bookStockService.UpdateAsync(stock);
+                await _bookService.AddBorrowRecordAsync(borrowRecord);
+
+                TempData["SuccessMessage"] = $"Book borrowed successfully! Due date: {borrowRecord.DueDate:MMMM dd, yyyy}";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error borrowing book with ID {BookId}", id);
+                TempData["ErrorMessage"] = "An error occurred while borrowing the book.";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Return(int id)
+        {
+            try
+            {
+                // Find the active borrow record
+                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var borrowRecord = await _bookService.GetActiveBorrowRecordAsync(id, userId);
+
+                if (borrowRecord == null)
+                {
+                    TempData["ErrorMessage"] = "No active borrow record found for this book.";
+                    return RedirectToAction(nameof(Details), new { id });
+                }
+
+                // Update return date
+                borrowRecord.ReturnDate = DateTime.Now;
+                if (borrowRecord.ReturnDate > borrowRecord.DueDate)
+                {
+                    borrowRecord.IsOverdue = true;
+                }
+
+                // Increase available quantity
+                var stocks = await _bookStockService.GetByBookIdAsync(id);
+                var stock = stocks.FirstOrDefault(bs => bs.BranchId == borrowRecord.BranchId);
+                if (stock != null)
+                {
+                    stock.Quantity++;
+                    await _bookStockService.UpdateAsync(stock);
+                }
+
+                await _bookService.UpdateBorrowRecordAsync(borrowRecord);
+
+                TempData["SuccessMessage"] = "Book returned successfully!";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error returning book with ID {BookId}", id);
+                TempData["ErrorMessage"] = "An error occurred while returning the book.";
+                return RedirectToAction(nameof(Details), new { id });
             }
         }
     }

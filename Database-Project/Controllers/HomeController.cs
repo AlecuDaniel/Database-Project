@@ -46,7 +46,7 @@ namespace Database_Project.Controllers
         {
             return new List<FeaturedBook>
             {
-                new FeaturedBook
+ /*               new FeaturedBook
                 {
                     Title = "Harry Potter and the Order of the Phoenix",
                     ImagePath = "/img/harry-potter-and-the-order-of-the-phoenix-cover-image-692x1024.jpeg",
@@ -59,7 +59,7 @@ namespace Database_Project.Controllers
                     ImagePath = "/img/maitreyi.jpg",
                     Author = "Mircea Eliade",
                     Details = "256 pages"
-                },
+                },*/
                 // Adaugă celelalte cărți hardcodate aici
             };
         }

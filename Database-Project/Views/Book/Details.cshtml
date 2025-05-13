@@ -1,7 +1,16 @@
 ﻿@model Database_Project.Models.Book
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 
 @{
     ViewData["Title"] = "Book Details";
+    var userId = UserManager.GetUserId(User);
+    var activeBorrow = Model.BorrowRecords?.FirstOrDefault(br =>
+        br.UserId.ToString() == userId &&
+        br.ReturnDate == null);
+    var isLibrarianOrAdmin = User.IsInRole("Librarian") || User.IsInRole("Admin");
+    var dueDateString = activeBorrow?.DueDate.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
 }
 
 <link rel="stylesheet" href="~/css/style.css" />
@@ -50,8 +59,80 @@
                 </div>
 
                 <div class="book-actions mt-4">
-                    <a href="#" class="btn btn-borrow">Borrow</a>
-                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-edit">Edit</a>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        if (activeBorrow == null)
+                        {
+                            <form asp-action="Borrow" method="post" class="form-inline">
+                                <input type="hidden" name="id" value="@Model.Id" />
+                                <div class="form-group mr-2">
+                                    <label for="branchId" class="mr-2">Select Branch:</label>
+                                    @if (Model.BookStocks?.Any(bs => bs.Quantity > 0) ?? false)
+                                    {
+                                        <select name="branchId" class="form-control" required>
+                                            @foreach (var stock in Model.BookStocks.Where(bs => bs.Quantity > 0))
+                                            {
+                                                <option value="@stock.BranchId">@stock.LibraryBranch.Name (Available: @stock.Quantity)</option>
+                                            }
+                                        </select>
+                                        <button type="submit" class="btn btn-success ml-2">Borrow</button>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-danger">This book is currently unavailable at all branches</p>
+                                    }
+                                </div>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="borrow-status alert @(DateTime.Now > activeBorrow.DueDate ? "alert-danger" : "alert-info")">
+                                <h5>Your Borrow Status</h5>
+                                <p><strong>Borrowed on:</strong> @activeBorrow.BorrowDate.ToString("MMMM dd, yyyy")</p>
+                                <p><strong>Due date:</strong> @activeBorrow.DueDate.ToString("MMMM dd, yyyy")</p>
+
+                                <div class="countdown-timer mt-2 mb-3">
+                                    <p><strong>Time remaining:</strong></p>
+                                    <div class="progress">
+                                        @{
+                                            var totalDays = (activeBorrow.DueDate - activeBorrow.BorrowDate).TotalDays;
+                                            var daysRemaining = (activeBorrow.DueDate - DateTime.Now).TotalDays;
+                                            var percentageRemaining = Math.Max(0, Math.Min(100, (daysRemaining / totalDays) * 100));
+                                        }
+                                        <div class="progress-bar @(daysRemaining < 3 ? "bg-warning" : "bg-success")"
+                                             role="progressbar"
+                                             style="width: @percentageRemaining%"
+                                             aria-valuenow="@percentageRemaining"
+                                             aria-valuemin="0"
+                                             aria-valuemax="100">
+                                            <span id="countdown-text">@Math.Ceiling(daysRemaining) days left</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @if (DateTime.Now > activeBorrow.DueDate)
+                                {
+                                    <p class="font-weight-bold text-danger">This book is overdue! Please return it immediately.</p>
+                                }
+
+                                <form asp-action="Return" method="post" class="mt-2">
+                                    <input type="hidden" name="id" value="@Model.Id" />
+                                    <button type="submit" class="btn btn-danger">Return Book</button>
+                                </form>
+                            </div>
+                        }
+
+                        @if (isLibrarianOrAdmin)
+                        {
+                            <div class="admin-actions mt-3">
+                                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit Book</a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary">Login to Borrow</a>
+                    }
                 </div>
             </div>
         </div>
@@ -85,5 +166,80 @@
 </div>
 
 <style>
-    <link rel="stylesheet" href="~/css/book.css" / >
+    .borrow-status {
+        border-left: 4px solid;
+        padding: 15px;
+    }
+
+    .alert-info {
+        border-left-color: #17a2b8;
+        background-color: #e8f4f8;
+    }
+
+    .alert-danger {
+        border-left-color: #dc3545;
+        background-color: #f8e8e8;
+    }
+
+    .countdown-timer {
+        margin: 10px 0;
+    }
+
+    .progress {
+        height: 25px;
+    }
+
+    .progress-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+
+    .admin-actions {
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+    }
 </style>
+
+
+@section Scripts {
+    @if (dueDateString != null)
+    {
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const dueDate = new Date("@dueDateString");
+                const totalLoanDays = 14;
+
+                function updateCountdown() {
+                    const now = new Date();
+                    const diff = dueDate - now;
+
+                    const timerElement = document.querySelector('.countdown-timer');
+                    const progressBar = document.querySelector('.progress-bar');
+                    const countdownText = document.getElementById('countdown-text');
+
+                    if (diff <= 0) {
+                        if (timerElement) {
+                            timerElement.innerHTML = '<p class="text-danger font-weight-bold">This book is overdue!</p>';
+                        }
+                        return;
+                    }
+
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const percentageRemaining = Math.max(0, Math.min(100, (diff / (totalLoanDays * 24 * 60 * 60 * 1000)) * 100));
+
+                    if (progressBar && countdownText) {
+                        progressBar.style.width = percentageRemaining + '%';
+                        countdownText.textContent = `${days}d ${hours}h ${minutes}m remaining`;
+                    }
+                }
+
+                updateCountdown();
+                setInterval(updateCountdown, 60000);
+            });
+        </script>
+    }
+}
