@@ -1,7 +1,16 @@
 ﻿@model Database_Project.Models.Book
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 
 @{
     ViewData["Title"] = "Book Details";
+    var currentUser = await UserManager.GetUserAsync(User);
+    var userId = currentUser.Id;
+
+    var activeBorrow = Model.BorrowRecords?
+        .FirstOrDefault(br => br.UserId == userId && br.ReturnDate == null);
+    var isLibrarianOrAdmin = User.IsInRole("Librarian") || User.IsInRole("Admin");
 }
 
 <link rel="stylesheet" href="~/css/style.css" />
@@ -50,8 +59,58 @@
                 </div>
 
                 <div class="book-actions mt-4">
-                    <a href="#" class="btn btn-borrow">Borrow</a>
-                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-edit">Edit</a>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        if (activeBorrow != null)
+                        {
+                            <div class="borrow-status alert @(DateTime.Now > activeBorrow.DueDate ? "alert-danger" : "alert-info")">
+                                <h5>Your Borrow Status</h5>
+                                <p><strong>Borrowed on:</strong> @activeBorrow.BorrowDate.ToString("MMMM dd, yyyy")</p>
+                                <p><strong>Due date:</strong> @activeBorrow.DueDate.ToString("MMMM dd, yyyy")</p>
+
+                                @if (DateTime.Now > activeBorrow.DueDate)
+                                {
+                                    <p class="font-weight-bold text-danger">This book is overdue! Please return it immediately.</p>
+                                }
+
+                                <form asp-action="Return" method="post" class="mt-2">
+                                    <input type="hidden" name="id" value="@Model.Id" />
+                                    <button type="submit" class="btn btn-danger">Return Book</button>
+                                </form>
+                            </div>
+                        }
+                        else if (Model.BookStocks?.Any(bs => bs.Quantity > 0) ?? false)
+                        {
+                            <form asp-action="Borrow" method="post" class="form-inline">
+                                <input type="hidden" name="id" value="@Model.Id" />
+                                <div class="form-group mr-2">
+                                    <label for="branchId" class="mr-2">Select Branch:</label>
+                                    <select name="branchId" class="form-control" required>
+                                        @foreach (var stock in Model.BookStocks.Where(bs => bs.Quantity > 0))
+                                        {
+                                            <option value="@stock.BranchId">@stock.LibraryBranch.Name (Available: @stock.Quantity)</option>
+                                        }
+                                    </select>
+                                    <button type="submit" class="btn btn-success ml-2">Borrow</button>
+                                </div>
+                            </form>
+                        }
+                        else
+                        {
+                            <p class="text-danger">This book is currently unavailable at all branches</p>
+                        }
+
+                        @if (isLibrarianOrAdmin)
+                        {
+                            <div class="admin-actions mt-3">
+                                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit Book</a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary">Login to Borrow</a>
+                    }
                 </div>
             </div>
         </div>
@@ -85,5 +144,23 @@
 </div>
 
 <style>
-    <link rel="stylesheet" href="~/css/book.css" / >
+    .borrow-status {
+        border-left: 4px solid;
+        padding: 15px;
+    }
+
+    .alert-info {
+        border-left-color: #17a2b8;
+        background-color: #e8f4f8;
+    }
+
+    .alert-danger {
+        border-left-color: #dc3545;
+        background-color: #f8e8e8;
+    }
+
+    .admin-actions {
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+    }
 </style>

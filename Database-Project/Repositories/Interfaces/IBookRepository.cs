@@ -12,5 +12,9 @@ namespace Database_Project.Repositories
         Task AddAsync(Book book);
         Task UpdateAsync(Book book);
         Task DeleteAsync(int id);
+        Task AddBorrowRecordAsync(BorrowRecord record);
+        Task UpdateBorrowRecordAsync(BorrowRecord record);
+        Task<BorrowRecord> GetActiveBorrowRecordAsync(int bookId, int userId);
+        Task<Book> GetBookWithStocksAsync(int id);
     }
 }

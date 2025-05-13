@@ -80,7 +80,7 @@ namespace Database_Project.Areas.Identity.Pages.Account
                 Email = Input.Email,
                 FirstName = Input.FirstName,
                 LastName = Input.LastName,
-                UserRole = "Librarian" // Automatically set to Member
+                UserRole = "Admin" // Automatically set to Member
             };
 
             var result = await _userManager.CreateAsync(user, Input.Password);

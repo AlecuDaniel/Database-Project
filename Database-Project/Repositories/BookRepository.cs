@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Database_Project.Models;
 using Database_Project.Data;
@@ -18,16 +19,21 @@ namespace Database_Project.Repositories
         public async Task<IEnumerable<Book>> GetAllAsync()
         {
             return await _context.Books
-                                 .Include(b => b.BookStocks)
-                                 .ToListAsync();
+                .Include(b => b.BookStocks)
+                .ThenInclude(bs => bs.LibraryBranch)
+                .Include(b => b.BorrowRecords)
+                .ToListAsync();
         }
 
         public async Task<Book> GetByIdAsync(int id)
         {
             return await _context.Books
-                                 .Include(b => b.BookStocks)
-                                 .FirstOrDefaultAsync(b => b.Id == id);
+                .Include(b => b.BookStocks)
+                .ThenInclude(bs => bs.LibraryBranch)
+                .Include(b => b.BorrowRecords)
+                .FirstOrDefaultAsync(b => b.Id == id);
         }
+
         public async Task<Book> GetByIdForUpdateAsync(int id)
         {
             return await _context.Books
@@ -54,6 +60,38 @@ namespace Database_Project.Repositories
                 _context.Books.Remove(book);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task AddBorrowRecordAsync(BorrowRecord record)
+        {
+            _context.BorrowRecords.Add(record);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateBorrowRecordAsync(BorrowRecord record)
+        {
+            _context.BorrowRecords.Update(record);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<BorrowRecord> GetActiveBorrowRecordAsync(int bookId, int userId)
+        {
+            return await _context.BorrowRecords
+                .Include(br => br.Book)
+                .Include(br => br.LibraryBranch)
+                .Where(br => br.BookId == bookId &&
+                             br.UserId == userId &&
+                             br.ReturnDate == null)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<Book> GetBookWithStocksAsync(int id)
+        {
+            return await _context.Books
+                .Include(b => b.BookStocks)
+                .ThenInclude(bs => bs.LibraryBranch)
+                .ThenInclude(bs => bs.BorrowRecords)
+                .FirstOrDefaultAsync(b => b.Id == id);
         }
     }
 }

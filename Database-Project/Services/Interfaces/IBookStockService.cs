@@ -12,5 +12,6 @@ namespace Database_Project.Services.Interfaces
         Task UpdateAsync(BookStock bookStock);
         Task DeleteAsync(int id);
         Task<IEnumerable<BookStock>> GetByBookIdAsync(int bookId);
+        Task<BookStock> GetByBookAndBranchAsync(int bookId, int branchId);
     }
 }
