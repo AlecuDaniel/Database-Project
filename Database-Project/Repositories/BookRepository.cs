@@ -90,6 +90,7 @@ namespace Database_Project.Repositories
             return await _context.Books
                 .Include(b => b.BookStocks)
                 .ThenInclude(bs => bs.LibraryBranch)
+                .ThenInclude(bs => bs.BorrowRecords)
                 .FirstOrDefaultAsync(b => b.Id == id);
         }
     }
