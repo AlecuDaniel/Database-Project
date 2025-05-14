@@ -17,18 +17,37 @@ namespace Database_Project.Controllers
         {
             _logger = logger;
             _bookService = bookService;
+
         }
 
-        public async Task<IActionResult> Index()
+
+
+        public async Task<IActionResult> Index(string searchString)
         {
-            
+            var allBooks = await _bookService.GetAllBooksAsync();
+                       
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                searchString = searchString.ToLower(); 
+
+                allBooks = allBooks.Where(b =>
+                 
+                    (b.Title != null && b.Title.ToLower().Contains(searchString)) ||
+
+                    (b.Authors != null && b.Authors.Any(a => a != null && a.ToString().ToLower().Contains(searchString))) ||
+
+                    
+                    (b.Publisher != null && b.Publisher.ToLower().Contains(searchString))
+                ).ToList();
+            }
             var model = new HomeViewModel
             {
-                AllBooks = await _bookService.GetAllBooksAsync()
+                AllBooks = allBooks
             };
 
             return View(model);
         }
+
 
         public IActionResult Privacy()
         {
