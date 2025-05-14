@@ -25,7 +25,6 @@
         </div>
 
         <ul class="main-nav-list">
-            <li><a class="main-nav-link" asp-controller="Account" asp-action="Profile">View Profile</a></li>
 
             @if (User.IsInRole("Admin"))
             {
@@ -34,7 +33,8 @@
 
             @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
             {
-                <li><a class="main-nav-link" asp-controller="UnwantedCustomers" asp-action="Index">Librarian Panel</a></li>
+                <li><a class="main-nav-link" asp-controller="BookStock" asp-action="Index">Book Stocks</a></li>
+                <li><a class="main-nav-link" asp-controller="UnwantedCustomers" asp-action="Index">Blacklist</a></li>
             }
 
             <li><partial name="_LoginPartial" /></li>
