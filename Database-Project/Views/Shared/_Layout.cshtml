@@ -15,17 +15,30 @@
     <header class="header">
         <div class="secondary-nav">
             <ul class="secondary-nav-list">
-                <li><a class="secondary-nav-link" asp-controller ="Home" asp-action="Index">Home</a></li>
-                <li><a class="secondary-nav-link" asp-controller="Book" asp-action="Index">Add Books</a></li>
-                @* <li><a class="secondary-nav-link" href="about-us.html">About us</a></li> *@
+                <li><a class="secondary-nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+
+                @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
+                {
+                    <li><a class="secondary-nav-link" asp-controller="Book" asp-action="Index">Add Books</a></li>
+                }
             </ul>
         </div>
-        <li><a class="main-nav-link" asp-controller="Account" asp-action="Profile">View Profile</a></li>
-        <li><a class="main-nav-link" asp-controller="Admin" asp-action="Index">Admin Panel</a></li>
-        <li><a class="main-nav-link" asp-controller="UnwantedCustomers" asp-action="Index">Librarian Panel</a></li>
-        <partial name="_LoginPartial" />
-    </header>
-    </nav>
+
+        <ul class="main-nav-list">
+            <li><a class="main-nav-link" asp-controller="Account" asp-action="Profile">View Profile</a></li>
+
+            @if (User.IsInRole("Admin"))
+            {
+                <li><a class="main-nav-link" asp-controller="Admin" asp-action="Index">Admin Panel</a></li>
+            }
+
+            @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
+            {
+                <li><a class="main-nav-link" asp-controller="UnwantedCustomers" asp-action="Index">Librarian Panel</a></li>
+            }
+
+            <li><partial name="_LoginPartial" /></li>
+        </ul>
     </header>
     <div class="container main-container">
         <main role="main" class="pb-3">

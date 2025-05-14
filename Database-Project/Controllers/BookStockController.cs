@@ -59,7 +59,7 @@ namespace Database_Project.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Log the issue
+            
             Console.WriteLine("Model is invalid");
             foreach (var key in ModelState.Keys)
             {
@@ -70,7 +70,7 @@ namespace Database_Project.Controllers
                 }
             }
 
-            // Repopulate dropdowns if validation fails
+            
             model.Books = (await _bookService.GetAllBooksAsync())
                 .Select(b => new SelectListItem { Value = b.Id.ToString(), Text = b.Title });
 
@@ -86,11 +86,11 @@ namespace Database_Project.Controllers
             if (stock == null)
                 return NotFound();
 
-            // Populate the dropdown lists with books and branches
+            
             ViewBag.Books = new SelectList(await _bookService.GetAllBooksAsync(), "Id", "Title", stock.BookId);
             ViewBag.Branches = new SelectList(await _branchService.GetAllAsync(), "Id", "Name", stock.BranchId);
 
-            // Return the stock object to be edited
+            
             var viewModel = new BookStockViewModel
             {
                 BookId = stock.BookId,
@@ -113,7 +113,7 @@ namespace Database_Project.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // Repopulate dropdowns in case of failure
+                
                 model.Books = (await _bookService.GetAllBooksAsync())
                     .Select(b => new SelectListItem { Value = b.Id.ToString(), Text = b.Title });
 

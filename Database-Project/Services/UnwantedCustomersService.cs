@@ -32,7 +32,7 @@ namespace Database_Project.Services
             if (_repository.Exists(unwantedCustomer.UserId))
                 throw new InvalidOperationException("This user is already in the unwanted list.");
 
-            // DateAdded is automatically set in the model
+            
             _repository.Add(unwantedCustomer);
         }
 

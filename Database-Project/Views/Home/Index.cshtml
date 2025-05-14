@@ -14,22 +14,7 @@
 </div>
 
 <div class="home-container container grid grid--3--cols">
-    <!-- Cărți hardcodate -->
-    @foreach (var book in Model.FeaturedBooks)
-    {
-        <div class="meal">
-            <a href="#">
-                <img class="travel-image" src="@book.ImagePath" alt="@book.Title" />
-            </a>
-            <p class="meal-title">@book.Title</p>
-            <ul class="meal-attributes">
-                <li class="meal-attribute"><span>By: @book.Author</span></li>
-                <li class="meal-attribute"><span>@book.Details</span></li>
-            </ul>
-        </div>
-    }
-
-    <!-- Cărți din CRUD -->
+    
     @foreach (var book in Model.AllBooks)
     {
         <div class="meal">
