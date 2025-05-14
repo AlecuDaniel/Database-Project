@@ -11,5 +11,7 @@ namespace Database_Project.Services
         void UpdateUnwantedCustomer(UnwantedCustomer unwantedCustomer);
         void RemoveUnwantedCustomer(int userId);
         IEnumerable<User> GetPotentialUnwantedCustomers();
+        bool IsUserUnwanted(int userId);
+
     }
 }

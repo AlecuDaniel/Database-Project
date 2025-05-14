@@ -79,6 +79,10 @@
                                 </form>
                             </div>
                         }
+                        else if (ViewBag.IsUnwanted == true)
+                        {
+                            <p class="text-danger font-weight-bold">Ai interdicție de a mai împrumuta cărți până când returnezi cărțile restante.</p>
+                        }
                         else if (Model.BookStocks?.Any(bs => bs.Quantity > 0) ?? false)
                         {
                             <form asp-action="Borrow" method="post" class="form-inline">

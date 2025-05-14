@@ -12,26 +12,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Database_Project.Controllers
 {
-    [Authorize(Roles = "Librarian,Admin")]
+    [Authorize(Roles = "Member,Librarian,Admin")]
     public class BookController : Controller
     {
         private readonly IBookService _bookService;
         private readonly IBookStockService _bookStockService;
         private readonly IImageService _imageService;
         private readonly ILogger<BookController> _logger;
+        private readonly IUnwantedCustomersService _unwantedCustomersService;
 
         public BookController(
             IBookService bookService,
             IBookStockService bookStockService,
             IImageService imageService,
-            ILogger<BookController> logger)
+            ILogger<BookController> logger,
+            IUnwantedCustomersService unwantedCustomersService)
+           
         {
             _bookService = bookService;
             _bookStockService = bookStockService;
             _imageService = imageService;
             _logger = logger;
+            _unwantedCustomersService = unwantedCustomersService;
+         
         }
-
+        [Authorize(Roles = "Librarian,Admin")]
         public async Task<IActionResult> Index()
         {
             var books = await _bookService.GetAllBooksAsync();
@@ -48,9 +53,19 @@ namespace Database_Project.Controllers
             if (book == null)
                 return NotFound();
 
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (int.TryParse(userIdClaim, out int userId))
+            {
+                ViewBag.IsUnwanted = _unwantedCustomersService.IsUserUnwanted(userId);
+            }
+            else
+            {
+                ViewBag.IsUnwanted = false;
+            }
+
             return View(book);
         }
-
+        [Authorize(Roles = "Librarian,Admin")]
         public IActionResult Create()
         {
             return View();
@@ -58,6 +73,7 @@ namespace Database_Project.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Librarian,Admin")]
         public async Task<IActionResult> Create(Book book, IFormFile imageFile)
         {
             if (ModelState.IsValid)
@@ -80,7 +96,7 @@ namespace Database_Project.Controllers
             }
             return View(book);
         }
-
+        [Authorize(Roles = "Librarian,Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             var book = await _bookService.GetBookByIdForUpdateAsync(id);
@@ -92,6 +108,7 @@ namespace Database_Project.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Librarian,Admin")]
         public async Task<IActionResult> Edit(int id, Book book, IFormFile imageFile)
         {
             if (id != book.Id)
@@ -136,7 +153,7 @@ namespace Database_Project.Controllers
             }
             return View(book);
         }
-
+        [Authorize(Roles = "Librarian,Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var book = await _bookService.GetBookByIdForUpdateAsync(id);
@@ -145,7 +162,7 @@ namespace Database_Project.Controllers
 
             return View(book);
         }
-
+        [Authorize(Roles = "Librarian,Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -174,6 +191,20 @@ namespace Database_Project.Controllers
         {
             try
             {
+                var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+                {
+                    TempData["ErrorMessage"] = "Unable to identify user.";
+                    return RedirectToAction(nameof(Details), new { id });
+                }
+
+                // 🔐 Verificare dacă user-ul este restricționat
+                if (_unwantedCustomersService.IsUserUnwanted(userId))
+                {
+                    TempData["ErrorMessage"] = "Nu ai permisiunea de a împrumuta cărți.";
+                    return RedirectToAction(nameof(Details), new { id });
+                }
+
                 var stock = await _bookStockService.GetByBookAndBranchAsync(id, branchId);
                 if (stock == null || stock.Quantity <= 0)
                 {
@@ -181,17 +212,10 @@ namespace Database_Project.Controllers
                     return RedirectToAction(nameof(Details), new { id });
                 }
 
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (string.IsNullOrEmpty(userId))
-                {
-                    TempData["ErrorMessage"] = "Unable to identify user.";
-                    return RedirectToAction(nameof(Details), new { id });
-                }
-
                 var borrowRecord = new BorrowRecord
                 {
                     BookId = id,
-                    UserId = int.Parse(userId),
+                    UserId = userId,
                     BranchId = branchId,
                     BorrowDate = DateTime.Now,
                     DueDate = DateTime.Now.AddDays(14),
