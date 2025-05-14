@@ -6,9 +6,9 @@ using Database_Project.Models;
 namespace Database_Project.Data
 {
     public class ApplicationDbContext : IdentityDbContext<
-        User,                     // Custom User with int key
-        IdentityRole<int>,        // IdentityRole with int key
-        int,                      // Primary key type
+        User,                     
+        IdentityRole<int>,        
+        int,                      
         IdentityUserClaim<int>,
         IdentityUserRole<int>,
         IdentityUserLogin<int>,

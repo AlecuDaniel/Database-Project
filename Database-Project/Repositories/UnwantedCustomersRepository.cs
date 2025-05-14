@@ -32,14 +32,14 @@ namespace Database_Project.Repository
 
         public void Add(UnwantedCustomer unwantedCustomer)
         {
-            // Data este setată automat în model
+            
             _context.UnwantedCustomers.Add(unwantedCustomer);
             _context.SaveChanges();
         }
 
         public void Update(UnwantedCustomer unwantedCustomer)
         {
-            // Păstrăm data originală la update
+            
             var existing = _context.UnwantedCustomers.Find(unwantedCustomer.UserId);
             if (existing != null)
             {

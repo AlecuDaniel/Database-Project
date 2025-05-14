@@ -19,7 +19,7 @@
 
 <div class="book-details-container">
     <div class="row">
-        <!-- Book Cover Column -->
+        
         <div class="col-md-4">
             <div class="book-cover-container">
                 @if (!string.IsNullOrEmpty(Model.ImagePath))
@@ -36,7 +36,7 @@
             </div>
         </div>
 
-        <!-- Book Details Column -->
+        
         <div class="col-md-8">
             <div class="book-info">
                 <h1 class="book-title">@Model.Title</h1>
@@ -116,7 +116,7 @@
         </div>
     </div>
 
-    <!-- Description Section -->
+    
     <div class="row mt-4">
         <div class="col-12">
             <div class="description-section">
@@ -135,7 +135,7 @@
         </div>
     </div>
 
-    <!-- Back Button -->
+    
     <div class="row mt-4">
         <div class="col-12">
             <a asp-action="Index" class="btn btn-back">Back to List</a>

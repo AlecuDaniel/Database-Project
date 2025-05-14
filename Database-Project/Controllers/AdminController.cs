@@ -16,20 +16,20 @@ namespace Database_Project.Controllers
             _branchService = branchService;
         }
 
-        // GET: Admin
+        
         public async Task<IActionResult> Index()
         {
             var branches = await _branchService.GetAllBranchesAsync();
             return View(branches);
         }
 
-        // GET: Admin/AddBranch
+        
         public IActionResult AddBranch()
         {
             return View();
         }
 
-        // POST: Admin/AddBranch
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddBranch(LibraryBranch branch)
@@ -42,7 +42,7 @@ namespace Database_Project.Controllers
             return View(branch);
         }
 
-        // GET: Admin/Edit/5
+        
         public async Task<IActionResult> Edit(int id)
         {
             var branch = await _branchService.GetBranchByIdAsync(id);
@@ -53,7 +53,7 @@ namespace Database_Project.Controllers
             return View(branch);
         }
 
-        // POST: Admin/Edit/5
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, LibraryBranch branch)
@@ -71,7 +71,7 @@ namespace Database_Project.Controllers
             return View(branch);
         }
 
-        // GET: Admin/Delete/5
+        
         public async Task<IActionResult> Delete(int id)
         {
             var branch = await _branchService.GetBranchByIdAsync(id);
@@ -82,7 +82,7 @@ namespace Database_Project.Controllers
             return View(branch);
         }
 
-        // POST: Admin/Delete/5
+        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

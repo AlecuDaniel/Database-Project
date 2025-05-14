@@ -109,19 +109,19 @@ namespace Database_Project.Controllers
                         return NotFound();
                     }
 
-                    // Update properties
+                    
                     existingBook.Title = book.Title;
                     existingBook.ISBN = book.ISBN;
                     existingBook.Authors = book.Authors;
                     existingBook.Publisher = book.Publisher;
                     existingBook.Description = book.Description;
 
-                    // Handle image upload
+                    
                     if (imageFile != null && imageFile.Length > 0)
                     {
-                        // Delete old image if exists
+                        
                         _imageService.DeleteImage(existingBook.ImagePath);
-                        // Upload new image
+                        
                         existingBook.ImagePath = await _imageService.UploadImageAsync(imageFile);
                     }
 
@@ -155,7 +155,7 @@ namespace Database_Project.Controllers
                 var book = await _bookService.GetBookByIdForUpdateAsync(id);
                 if (book != null)
                 {
-                    // Delete associated image
+                    
                     _imageService.DeleteImage(book.ImagePath);
                     await _bookService.DeleteBookAsync(id);
                 }
@@ -220,7 +220,7 @@ namespace Database_Project.Controllers
         {
             try
             {
-                // Find the active borrow record
+                
                 var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 var borrowRecord = await _bookService.GetActiveBorrowRecordAsync(id, userId);
 
@@ -230,14 +230,14 @@ namespace Database_Project.Controllers
                     return RedirectToAction(nameof(Details), new { id });
                 }
 
-                // Update return date
+                
                 borrowRecord.ReturnDate = DateTime.Now;
                 if (borrowRecord.ReturnDate > borrowRecord.DueDate)
                 {
                     borrowRecord.IsOverdue = true;
                 }
 
-                // Increase available quantity
+                
                 var stocks = await _bookStockService.GetByBookIdAsync(id);
                 var stock = stocks.FirstOrDefault(bs => bs.BranchId == borrowRecord.BranchId);
                 if (stock != null)

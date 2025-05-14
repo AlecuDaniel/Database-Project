@@ -37,14 +37,14 @@ namespace Database_Project.Services
 
         public async Task UpdateUserRoleAsync(User user, string newRole)
         {
-            // Remove from all roles
+            
             var currentRoles = await _userManager.GetRolesAsync(user);
             await _userManager.RemoveFromRolesAsync(user, currentRoles);
 
-            // Add to new role
+            
             await _userManager.AddToRoleAsync(user, newRole);
 
-            // Update the UserRole property
+            
             user.UserRole = newRole;
             await _userManager.UpdateAsync(user);
         }
