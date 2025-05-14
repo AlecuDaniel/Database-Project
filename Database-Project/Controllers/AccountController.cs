@@ -7,11 +7,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Database_Project.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Database_Project.Controllers
 {
     public class AccountController : Controller
     {
+        [Authorize]
         public IActionResult Login()
         {
             return View();

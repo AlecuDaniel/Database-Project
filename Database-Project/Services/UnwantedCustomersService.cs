@@ -23,6 +23,11 @@ namespace Database_Project.Services
         {
             return _repository.GetById(userId);
         }
+        public bool IsUserUnwanted(int userId)
+        {
+            var unwanted = _repository.GetById(userId);
+            return unwanted != null && unwanted.IsActive;
+        }
 
         public void AddUnwantedCustomer(UnwantedCustomer unwantedCustomer)
         {
