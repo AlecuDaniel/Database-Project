@@ -43,6 +43,8 @@ namespace Database_Project.Controllers
             return View(books);
         }
 
+
+        [Authorize]
         public async Task<IActionResult> Details(int id)
         {
             var book = await _bookService.GetBookByIdForUpdateAsync(id);
