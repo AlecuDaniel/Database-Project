@@ -9,8 +9,10 @@
 <link rel="stylesheet" href="~/css/home.css" />
 
 <div class="search-container container">
-    <input type="text" id="search-input" placeholder="Search for a book..." />
-    <button id="search-button">Search</button>
+    <form asp-action="Index" method="get" class="search-form">
+        <input type="text" name="searchString" id="search-input" placeholder="Search for a book..." value="@Context.Request.Query["searchString"]" />
+        <button type="submit" id="search-button">Search</button>
+    </form>
 </div>
 
 <div class="home-container container grid grid--3--cols">
