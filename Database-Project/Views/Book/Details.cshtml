@@ -6,7 +6,7 @@
 @{
     ViewData["Title"] = "Book Details";
     var currentUser = await UserManager.GetUserAsync(User);
-    var userId = currentUser.Id;
+    var userId = currentUser?.Id;
 
     var activeBorrow = Model.BorrowRecords?
         .FirstOrDefault(br => br.UserId == userId && br.ReturnDate == null);

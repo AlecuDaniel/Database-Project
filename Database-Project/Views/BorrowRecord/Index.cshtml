@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Database_Project.Models.BorrowRecord>
+
+@{
+    ViewData["Title"] = "Borrow Records";
+}
+
+<link rel="stylesheet" href="~/css/style.css" />
+<link rel="stylesheet" href="~/css/general.css" />
+
+<div class="container">
+    <h1>Borrow Records</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Book</th>
+                <th>User</th>
+                <th>Branch</th>
+                <th>Borrow Date</th>
+                <th>Due Date</th>
+                <th>Return Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in Model)
+            {
+                <tr>
+                    <td>@record.Book.Title</td>
+                    <td>@record.User.UserName</td>
+                    <td>@record.LibraryBranch.Name</td>
+                    <td>@record.BorrowDate.ToShortDateString()</td>
+                    <td>@record.DueDate.ToShortDateString()</td>
+                    <td>@(record.ReturnDate?.ToShortDateString() ?? "Not returned")</td>
+                    <td>
+                        @if (record.ReturnDate != null)
+                        {
+                            <span class="badge bg-success">Returned</span>
+                        }
+                        else if (record.DueDate < DateTime.Now)
+                        {
+                            <span class="badge bg-danger">Overdue</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-primary">Borrowed</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
