@@ -45,6 +45,7 @@ namespace Database_Project.Controllers
 
 
         [Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
             var book = await _bookService.GetBookByIdForUpdateAsync(id);
