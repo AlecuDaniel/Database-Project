@@ -28,4 +28,12 @@ public class FakeBookRepository : IBookRepository
         return Task.FromResult(record);
     }
     public Task<Book> GetBookWithStocksAsync(int id) => GetByIdAsync(id);
+
+    public int GetActiveBorrowRecordsCount(int bookId, int userId)
+    {
+        return _borrowRecords.Count(kvp =>
+            kvp.Key.bookId == bookId &&
+            kvp.Key.userId == userId &&
+            kvp.Value.ReturnDate == null);
+    }
 }
