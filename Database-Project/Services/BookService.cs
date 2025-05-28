@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Database_Project.Models;
 using Database_Project.Repositories;
 using Database_Project.Repositories.Interfaces;
+using Database_Project.Repository;
+
 
 namespace Database_Project.Services
 {
@@ -10,11 +12,13 @@ namespace Database_Project.Services
     {
         private readonly IBookRepository _bookRepository;
         private readonly IBookStockRepository _bookStockRepository;
+        private readonly IUnwantedCustomersRepository _unwantedCustomersRepository;
 
-        public BookService(IBookRepository bookRepository, IBookStockRepository bookStockRepository)
+        public BookService(IBookRepository bookRepository, IBookStockRepository bookStockRepository, IUnwantedCustomersRepository unwantedCustomersRepository )
         {
             _bookRepository = bookRepository;
             _bookStockRepository = bookStockRepository;
+            _unwantedCustomersRepository = unwantedCustomersRepository;
         }
 
         public async Task<IEnumerable<Book>> GetAllBooksAsync()
@@ -59,6 +63,29 @@ namespace Database_Project.Services
 
         public async Task AddBorrowRecordAsync(BorrowRecord record)
         {
+            
+            if (_unwantedCustomersRepository.Exists(record.UserId))
+            {
+                var unwanted = _unwantedCustomersRepository.GetById(record.UserId);
+                if (unwanted?.IsActive == true)
+                {
+                    throw new InvalidOperationException("User is unwanted and cannot borrow books.");
+                }
+            }
+
+            var stock = await _bookStockRepository.GetByBookAndBranchAsync(record.BookId, record.BranchId);
+            if (stock == null || stock.Quantity <= 0)
+            {
+                throw new InvalidOperationException("Book is not available in this branch.");
+            }
+
+            
+            var activeRecord = await GetActiveBorrowRecordAsync(record.BookId, record.UserId);
+            if (activeRecord != null)
+            {
+                throw new InvalidOperationException("User already has an active borrow record for this book.");
+            }
+
             await _bookRepository.AddBorrowRecordAsync(record);
         }
 

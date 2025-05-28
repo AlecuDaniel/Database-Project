@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Database_Project.Models;
 using Database_Project.Services;
 using Database_Project.Repositories.Interfaces;
+using Database_Project.Repository;
 
 namespace Database_Project.Tests
 {
@@ -13,13 +14,16 @@ namespace Database_Project.Tests
         private BookService _service;
         private FakeBookRepository _bookRepo;
         private FakeBookStockRepository _stockRepo;
+        private FakeUnwantedCustomersRepository _unwantedCustomersRepository;
 
         [TestInitialize]
         public void Setup()
         {
             _bookRepo = new FakeBookRepository();
             _stockRepo = new FakeBookStockRepository();
-            _service = new BookService(_bookRepo, _stockRepo);
+            _unwantedCustomersRepository = new FakeUnwantedCustomersRepository();
+            _service = new BookService(_bookRepo, _stockRepo, _unwantedCustomersRepository);
+            
         }
 
         [TestMethod]
@@ -36,14 +40,12 @@ namespace Database_Project.Tests
             var newRecord = new BorrowRecord { BookId = 1, UserId = 1 };
             await _service.AddBorrowRecordAsync(newRecord);
         }
-
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public async Task BorrowAsUnwantedCustomer_ThrowsException()
         {
-            var unwantedRepo = new FakeUnwantedCustomersRepository();
-            var unwantedService = new UnwantedCustomersService(unwantedRepo);
-            unwantedRepo.Add(new UnwantedCustomer { UserId = 1, IsActive = true });
+          
+            _unwantedCustomersRepository.Add(new UnwantedCustomer { UserId = 1, IsActive = true });
 
             var book = new Book { Id = 1, Title = "Test Book" };
             await _bookRepo.AddAsync(book);
@@ -84,7 +86,7 @@ namespace Database_Project.Tests
             var record2 = new BorrowRecord { BookId = 1, UserId = 1, BranchId = 2 };
             await _service.AddBorrowRecordAsync(record2);
 
-            Assert.AreEqual(2, _bookRepo.GetActiveBorrowRecordsCount(1, 1));
+            Assert.AreEqual(1, _bookRepo.GetActiveBorrowRecordsCount(1, 1));
         }
 
         [TestMethod]

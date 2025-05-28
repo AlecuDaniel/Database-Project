@@ -22,13 +22,16 @@ namespace Database_Project.Tests
         private BookService _service;
         private FakeBookRepository _bookRepo;
         private FakeBookStockRepository _stockRepo;
+        private FakeUnwantedCustomersRepository _unwantedCustomersRepository;
 
         [TestInitialize]
         public void Setup()
         {
             _bookRepo = new FakeBookRepository();
-            _stockRepo = new FakeBookStockRepository();
-            _service = new BookService(_bookRepo, _stockRepo);
+            _stockRepo = new FakeBookStockRepository(); 
+            _unwantedCustomersRepository = new FakeUnwantedCustomersRepository();
+            _service = new BookService(_bookRepo, _stockRepo, _unwantedCustomersRepository);
+
         }
 
 
